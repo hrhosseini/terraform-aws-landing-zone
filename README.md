@@ -26,29 +26,12 @@ both.
 
 ## Architecture overview
 
-```
-                          ┌─────────────────────────────────────────┐
-                          │              AWS Account                 │
-                          │                                          │
-   ┌──────────┐           │   ┌────────────┐     ┌───────────────┐  │
-   │ Terraform│──apply──▶ │   │ Networking │     │ IAM baseline  │  │
-   │   CLI    │           │   │ VPC/subnets│     │ admin/ro/dev  │  │
-   └──────────┘           │   │ IGW / NAT* │     └───────────────┘  │
-                          │   └────────────┘                        │
-                          │   ┌────────────┐     ┌───────────────┐  │
-                          │   │  Security  │     │   Logging     │  │
-                          │   │ CloudTrail │────▶│ central S3    │  │
-                          │   │ KMS / GD*  │     │ (encrypted)   │  │
-                          │   │ Config*/SH*│     └───────────────┘  │
-                          │   └────────────┘                        │
-                          │   ┌────────────┐                        │
-                          │   │ Monitoring │  SNS topic + alarms    │
-                          │   └────────────┘                        │
-                          └─────────────────────────────────────────┘
-                              * = optional, off by default
-```
+![AWS Landing Zone architecture](docs/images/architecture.svg)
 
-See [docs/architecture.md](docs/architecture.md) for detail.
+Terraform applies one reusable root module that composes five building blocks —
+networking, IAM, security, logging, and monitoring — into a single AWS account
+baseline, repeated per environment. Anything marked `*` is optional and off by
+default. See [docs/architecture.md](docs/architecture.md) for detail.
 
 ## Features
 

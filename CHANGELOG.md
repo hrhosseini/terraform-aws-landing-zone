@@ -23,8 +23,14 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `environments/{dev,staging,prod}` deployable stacks with isolated remote
   state.
 - `examples/{basic,multi-account}`.
-- Documentation: architecture, security, costs, deployment guide,
-  troubleshooting, and per-module READMEs.
+- Documentation: architecture (with an SVG architecture diagram), security,
+  costs, deployment guide, troubleshooting, and per-module READMEs.
+
+### Fixed
+- AWS Config role now includes an explicit S3 delivery policy
+  (`s3:PutObject` / `s3:GetBucketAcl`) so configuration snapshots deliver
+  without `AccessDenied`; the delivery channel now waits for the bucket and
+  role policies to exist.
 - CI: `terraform fmt`/`validate`/`tflint` and Trivy/Checkov security scans
   (no auto-deploy).
 - Open-source scaffolding: MIT license, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY,
