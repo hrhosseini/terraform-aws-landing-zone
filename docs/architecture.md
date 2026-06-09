@@ -1,9 +1,14 @@
 # Architecture
 
+![AWS Landing Zone architecture](images/architecture.svg)
+
 This landing zone is a set of small, composable Terraform modules wired together
 by a root composition module. The root is itself a **reusable module**: the
 `environments/*` stacks and `examples/*` call it via `source`, each supplying its
 own provider and (for environments) remote state.
+
+The diagram above shows the runtime view (what gets created in the account); the
+diagram below shows the code view (how the modules are wired):
 
 ```
 environments/dev ─┐
