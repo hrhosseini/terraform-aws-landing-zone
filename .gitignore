@@ -29,3 +29,4 @@ override.tf.json
 *_override.tf.json
 
 # Keep the dependency lock file (.terraform.lock.hcl) tracked
+.gitignore
