@@ -1,0 +1,54 @@
+# ===========================================================================
+# Example variables for the AWS Landing Zone root module.
+#
+# Copy to terraform.tfvars and edit. NEVER commit a real terraform.tfvars —
+# it is git-ignored. Do not put secrets here; use environment variables or a
+# secrets manager for credentials.
+# ===========================================================================
+
+project     = "acme"
+environment = "dev"
+aws_region  = "eu-west-1"
+
+tags = {
+  Owner     = "platform-team"
+  CostCenter = "1234"
+}
+
+# --- Networking -------------------------------------------------------------
+vpc_cidr = "10.0.0.0/16"
+az_count = 2
+
+# NAT Gateway is OFF by default (it costs money). Turn on only if private
+# subnets need outbound internet access.
+enable_nat_gateway = false
+single_nat_gateway = true
+enable_flow_logs   = false
+
+# --- IAM --------------------------------------------------------------------
+create_iam_baseline   = true
+iam_require_mfa       = true
+create_developer_role = false
+# Restrict who can assume the baseline roles (recommended for production).
+# iam_trusted_principal_arns = ["arn:aws:iam::123456789012:root"]
+
+# --- Security ---------------------------------------------------------------
+enable_cloudtrail = true
+create_kms_key    = true
+
+# Paid services — all OFF by default. Enable per environment as needed.
+enable_config      = false
+enable_guardduty   = false
+enable_securityhub = false
+
+# --- Monitoring -------------------------------------------------------------
+create_monitoring     = true
+alarm_email_addresses = [] # e.g. ["alerts@example.com"]
+
+# Billing alarm only works when aws_region = "us-east-1".
+enable_billing_alarm        = false
+billing_alarm_threshold_usd = 50
+
+# --- Safety -----------------------------------------------------------------
+# Keep false in production so log buckets are never deleted with data in them.
+force_destroy_buckets = false
