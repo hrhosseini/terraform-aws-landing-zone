@@ -106,6 +106,41 @@ resource "aws_iam_role_policy_attachment" "config" {
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWS_ConfigRole"
 }
 
+# The managed AWS_ConfigRole policy does NOT grant write access to a custom
+# delivery bucket. Without this, Config fails to deliver snapshots with
+# AccessDenied. Grant exactly the S3 permissions the delivery channel needs.
+data "aws_iam_policy_document" "config_s3_delivery" {
+  count = var.enable_config ? 1 : 0
+
+  statement {
+    sid       = "ConfigBucketAcl"
+    effect    = "Allow"
+    actions   = ["s3:GetBucketAcl"]
+    resources = [aws_s3_bucket.config[0].arn]
+  }
+
+  statement {
+    sid       = "ConfigBucketDelivery"
+    effect    = "Allow"
+    actions   = ["s3:PutObject"]
+    resources = ["${aws_s3_bucket.config[0].arn}/AWSLogs/${local.account_id}/Config/*"]
+
+    condition {
+      test     = "StringEquals"
+      variable = "s3:x-amz-acl"
+      values   = ["bucket-owner-full-control"]
+    }
+  }
+}
+
+resource "aws_iam_role_policy" "config_s3_delivery" {
+  count = var.enable_config ? 1 : 0
+
+  name   = "${var.name_prefix}-config-s3-delivery"
+  role   = aws_iam_role.config[0].id
+  policy = data.aws_iam_policy_document.config_s3_delivery[0].json
+}
+
 resource "aws_config_configuration_recorder" "this" {
   count = var.enable_config ? 1 : 0
 
@@ -124,7 +159,13 @@ resource "aws_config_delivery_channel" "this" {
   name           = "${var.name_prefix}-delivery"
   s3_bucket_name = aws_s3_bucket.config[0].id
 
-  depends_on = [aws_config_configuration_recorder.this]
+  # Config validates write access to the bucket when the channel is created, so
+  # the bucket policy and the role's S3 permissions must already exist.
+  depends_on = [
+    aws_config_configuration_recorder.this,
+    aws_s3_bucket_policy.config,
+    aws_iam_role_policy.config_s3_delivery,
+  ]
 }
 
 resource "aws_config_configuration_recorder_status" "this" {

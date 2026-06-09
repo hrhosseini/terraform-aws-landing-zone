@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="620" viewBox="0 0 960 620" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 z" fill="#5a6b7b"/>
+    </marker>
+    <style>
+      .title  { font-size: 22px; font-weight: 700; fill: #16191f; }
+      .sub    { font-size: 13px; fill: #5a6b7b; }
+      .acct   { font-size: 15px; font-weight: 700; fill: #232f3e; }
+      .mod    { font-size: 15px; font-weight: 700; fill: #ffffff; }
+      .item   { font-size: 12px; fill: #16191f; }
+      .opt    { font-size: 11px; fill: #8a6d00; }
+      .legend { font-size: 12px; fill: #5a6b7b; }
+      .edge   { stroke: #5a6b7b; stroke-width: 1.6; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Title -->
+  <text x="32" y="40" class="title">AWS Landing Zone — Architecture</text>
+  <text x="32" y="60" class="sub">One reusable Terraform module composing five building blocks into a secure account baseline.</text>
+
+  <!-- Terraform CLI / CI -->
+  <rect x="32" y="250" width="150" height="96" rx="10" fill="#ffffff" stroke="#623ce4" stroke-width="2"/>
+  <text x="107" y="290" text-anchor="middle" class="acct" fill="#623ce4">Terraform</text>
+  <text x="107" y="312" text-anchor="middle" class="sub">CLI / CI pipeline</text>
+  <text x="107" y="330" text-anchor="middle" class="sub">(fmt · validate · plan)</text>
+
+  <!-- apply arrow -->
+  <path d="M182,298 L232,298" class="edge" marker-end="url(#arrow)"/>
+  <text x="207" y="290" text-anchor="middle" class="legend">apply</text>
+
+  <!-- AWS Account boundary -->
+  <rect x="240" y="90" width="688" height="500" rx="14" fill="#f6f8fa" stroke="#232f3e" stroke-width="2"/>
+  <text x="264" y="118" class="acct">AWS Account  ·  per environment (dev / staging / prod)</text>
+
+  <!-- Networking -->
+  <rect x="264" y="140" width="300" height="120" rx="10" fill="#1a73a7"/>
+  <text x="284" y="166" class="mod">Networking (VPC)</text>
+  <text x="284" y="190" class="item" fill="#eaf4fb">• Public / private subnets · multi-AZ</text>
+  <text x="284" y="210" class="item" fill="#eaf4fb">• Route tables · Internet Gateway</text>
+  <text x="284" y="230" class="item" fill="#eaf4fb">• NAT Gateway *   · VPC Flow Logs *</text>
+  <text x="284" y="250" class="opt" fill="#ffe08a">* optional · off by default</text>
+
+  <!-- IAM -->
+  <rect x="588" y="140" width="316" height="120" rx="10" fill="#3b7d3b"/>
+  <text x="608" y="166" class="mod">IAM baseline</text>
+  <text x="608" y="190" class="item" fill="#eaf6ea">• Admin · Read-only · Developer * roles</text>
+  <text x="608" y="210" class="item" fill="#eaf6ea">• Assume-role only — no users / keys</text>
+  <text x="608" y="230" class="item" fill="#eaf6ea">• MFA required by default</text>
+  <text x="608" y="250" class="opt" fill="#ffe08a">* optional</text>
+
+  <!-- Security -->
+  <rect x="264" y="288" width="300" height="138" rx="10" fill="#b5431f"/>
+  <text x="284" y="314" class="mod">Security</text>
+  <text x="284" y="338" class="item" fill="#fbe9e3">• CloudTrail — multi-region trail</text>
+  <text x="284" y="358" class="item" fill="#fbe9e3">• KMS key (rotation on)</text>
+  <text x="284" y="378" class="item" fill="#fbe9e3">• GuardDuty *  · Security Hub *</text>
+  <text x="284" y="398" class="item" fill="#fbe9e3">• AWS Config *</text>
+  <text x="284" y="418" class="opt" fill="#ffe08a">* optional · paid · off by default</text>
+
+  <!-- Logging -->
+  <rect x="588" y="288" width="316" height="138" rx="10" fill="#1b6b6b"/>
+  <text x="608" y="314" class="mod">Logging</text>
+  <text x="608" y="338" class="item" fill="#e3f4f4">• Central S3 log bucket</text>
+  <text x="608" y="358" class="item" fill="#e3f4f4">• Encrypted (KMS) · versioned</text>
+  <text x="608" y="378" class="item" fill="#e3f4f4">• Public access blocked · TLS-only</text>
+  <text x="608" y="398" class="item" fill="#e3f4f4">• Lifecycle rules (cost control)</text>
+
+  <!-- Monitoring -->
+  <rect x="264" y="454" width="640" height="112" rx="10" fill="#6a3fb0"/>
+  <text x="284" y="480" class="mod">Monitoring</text>
+  <text x="284" y="504" class="item" fill="#efe7fa">• SNS topic + email subscriptions</text>
+  <text x="284" y="524" class="item" fill="#efe7fa">• Custom CloudWatch metric alarms</text>
+  <text x="284" y="544" class="item" fill="#efe7fa">• Billing alarm *  (us-east-1)</text>
+  <text x="640" y="504" class="item" fill="#efe7fa">Alarms notify operators via SNS</text>
+  <text x="640" y="524" class="opt" fill="#ffe08a">* optional</text>
+
+  <!-- CloudTrail -> Logging edge -->
+  <path d="M564,346 L588,346" class="edge" marker-end="url(#arrow)"/>
+  <text x="588" y="446" class="legend">Logs delivered to the central, KMS-encrypted bucket</text>
+
+  <!-- Legend -->
+  <text x="32" y="430" class="legend" font-weight="700">Legend</text>
+  <rect x="32" y="443" width="12" height="12" rx="2" fill="#1a73a7"/>
+  <text x="50" y="453" class="legend">default (free)</text>
+  <text x="32" y="472" class="legend">* optional / paid,</text>
+  <text x="32" y="488" class="legend">  off by default</text>
+  <text x="32" y="516" class="legend">State: S3 backend</text>
+  <text x="32" y="532" class="legend">(see bootstrap/),</text>
+  <text x="32" y="548" class="legend">one key per env</text>
+</svg>
