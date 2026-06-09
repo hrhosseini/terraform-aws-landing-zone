@@ -30,4 +30,4 @@ to follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - Open-source scaffolding: MIT license, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY,
   issue/PR templates, Makefile, and pre-commit config.
 
-[Unreleased]: https://github.com/your-org/terraform-aws-landing-zone/compare/HEAD...HEAD
+[Unreleased]: https://github.com/hrhosseini/terraform-aws-landing-zone/compare/HEAD...HEAD

@@ -1,22 +1,28 @@
 # terraform-aws-landing-zone
 
-A reusable, production-grade **AWS Landing Zone** built with Terraform. Clone it,
-set a few variables, and stand up a secure account baseline: networking, IAM,
-centralized logging, CloudTrail, KMS encryption, optional threat detection, and
-basic monitoring — with **secure defaults** and **costs off by default**.
+Setting up a new AWS account always starts with the same chores: a VPC, some IAM
+roles, CloudTrail, a place to put logs, a bit of monitoring. This repo does that
+groundwork for you. Clone it, set a handful of variables, and you get a secure
+account baseline you can actually build on — networking, IAM, centralized
+logging, CloudTrail, KMS encryption, optional threat detection, and monitoring.
 
-> ⚠️ **This creates real AWS resources.** Some optional features incur charges.
-> Read [docs/costs.md](docs/costs.md) before applying. Never commit real
-> secrets, account IDs, or state files — see [Security notes](#security-notes).
+The defaults are deliberately safe and cheap: nothing public, encryption on
+everywhere, and every paid service switched **off** until you ask for it.
+
+> ⚠️ **Heads up — this creates real AWS resources.** A few optional features cost
+> money once enabled, so skim [docs/costs.md](docs/costs.md) before you apply.
+> And please don't commit real secrets, account IDs, or state files — see
+> [Security notes](#security-notes).
 
 ---
 
 ## What this project does
 
-It gives you a clean, modular starting point for a well-architected AWS account
-(or set of accounts). Every building block is a small, composable Terraform
-module; the repository root composes them into one landing zone you can deploy
-per environment (dev / staging / prod) or per account.
+Think of it as a tidy starting point for a well-architected AWS account (or a
+fleet of them). Each piece — networking, IAM, security, logging, monitoring — is
+its own small Terraform module, and the repo root stitches them together into one
+landing zone. Deploy it per environment (dev / staging / prod), per account, or
+both.
 
 ## Architecture overview
 
@@ -107,7 +113,7 @@ role down to the services in use. See [docs/security.md](docs/security.md).
 ### Quickest: the basic example (local state, free baseline)
 
 ```bash
-git clone https://github.com/<you>/terraform-aws-landing-zone.git
+git clone https://github.com/hrhosseini/terraform-aws-landing-zone.git
 cd terraform-aws-landing-zone/examples/basic
 
 terraform init
@@ -125,7 +131,7 @@ terraform init && terraform apply
 
 # 2. Point an environment at that bucket and deploy it.
 cd ../environments/dev
-#   edit backend.tf -> set bucket = "<the bucket from step 1>"
+#   edit backend.tf and set `bucket` to the name printed in step 1
 terraform init
 terraform plan
 terraform apply
@@ -135,7 +141,7 @@ terraform apply
 
 ```hcl
 module "landing_zone" {
-  source = "github.com/<you>/terraform-aws-landing-zone"
+  source = "github.com/hrhosseini/terraform-aws-landing-zone"
 
   project     = "acme"
   environment = "dev"
